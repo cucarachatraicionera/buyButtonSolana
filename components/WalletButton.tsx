@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 const RECEIVER_WALLET = "3tgQAhNjKoDMJGJc6gnA3dRkwnngxSgoHttonYJTGChL"; // Billetera donde se recibe SOL
 
 const WalletButton = () => {
-    const wallet = useWallet();
-    const [amount, setAmount] = useState(0.01); // Valor predeterminado: 0.01 SOL
+    const wallet = useWallet(); 
+    const [amount, setAmount] = useState(0.001); // Valor predeterminado: 0.01 SOL
     const [balance, setBalance] = useState<number>(0);
 
     useEffect(() => {

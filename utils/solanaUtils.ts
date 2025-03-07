@@ -19,10 +19,10 @@ export const getBalance = async (recipientAddress: string): Promise<number> => {
 };
 
 // Función para enviar SOL
-export const sendSol = async (wallet: WalletContextState, recipientAddress: string) => {
+export const sendSol = async (wallet: WalletContextState, recipientAddress: string): Promise<string | null> => {
     if (!wallet || !wallet.publicKey) {
         alert("Conecta tu billetera primero");
-        return;
+        return null;
     }
 
     try {
@@ -31,16 +31,21 @@ export const sendSol = async (wallet: WalletContextState, recipientAddress: stri
             SystemProgram.transfer({
                 fromPubkey: wallet.publicKey,
                 toPubkey: new PublicKey(recipientAddress),
-                lamports: 0.1 * 1e9, // 0.1 SOL en lamports
+                lamports: 0.001 * 1e9, // 0.1 SOL en lamports
             })
         );
 
         const signature = await wallet.sendTransaction(transaction, connection);
         console.log("Transacción enviada con éxito:", signature);
-        alert(`Transacción enviada: ${signature}`);
+
+        alert(`Transacción enviada: ${signature}\n\nHaz clic para copiar el hash.`);
+        navigator.clipboard.writeText(signature);
+
+        return signature;
     } catch (err) {
         console.error("Error al enviar SOL:", err);
         alert("Error al enviar SOL");
+        return null;
     }
 };
 
@@ -51,10 +56,10 @@ export const sendSplToken = async (
     mintAddress: string,
     amount: number,
     secretKey: string
-) => {
+): Promise<string | null> => {
     if (!wallet || !wallet.publicKey) {
         alert("Conecta tu billetera primero");
-        return;
+        return null;
     }
 
     try {
@@ -95,9 +100,13 @@ export const sendSplToken = async (
         );
 
         console.log("Token enviado con éxito:", transactionSignature);
-        alert(`Token enviado: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`);
+        alert(`Token enviado: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet\n\nHaz clic para copiar el hash.`);
+        navigator.clipboard.writeText(transactionSignature);
+
+        return transactionSignature;
     } catch (error) {
         console.error("Error al enviar SPL Token:", error);
         alert("Error al enviar SPL Token");
+        return null;
     }
 };
